@@ -1,6 +1,7 @@
 
 import socket
 import proverbs
+import time
 
 network = 'irc.freenode.net'
 port = 6667
@@ -13,22 +14,33 @@ irc.send ('JOIN #bottesting\r\n')
 irc.send ('PRIVMSG #bottesting :Welcome to Night Vale.\r\n')
 while True:
     data = irc.recv (4096)
+    data = data.split()
+    print data
+    irc.send(str(data))
 
-    if data.find ('PING') != -1:
-        irc.send ('PONG ' + data.split() [ 1 ] + '\r\n')
+#[':jackhholmes!~jackhholm@c-24-1-147-220.hsd1.in.comcast.net', 'PRIVMSG', '#bottesting', ':hi']
 
-    if data.find ('!goodnight') != -1:
+
+    if data[0] == 'PING':
+        irc.send ('PONG ' + data[ 1 ] + '\r\n')
+
+    if len(data) <= 3:
+        continue
+
+    if data[3].lower() ==':!goodnight':
         irc.send ('PRIVMSG #bottesting : Goodnight Night Vale, Goodnight\r\n')
+	time.sleep(1)
         irc.send ('PART #bottesting\r\n')
         irc.send ('QUIT\r\n')
 
-    if data.find ('KICK') != -1:
+    if data[3].lower() == 'KICK':
         irc.send ('JOIN #bottesting\r\n')
 
-    if data.find ('!proverbrandom') != -1:
+    if data[3].lower() == ':!proverbrandom':
         proverbs.random_proverb()
         irc.send ('PRIVMSG #bottesting : ' + proverb + ' \r\n')
 
-    if data.find ('!proverb') != -1:
+    if data[3].lower() == ':!proverb':
+        n = int(data[4])
         proverbs.proverb(n)
         irc.send ('PRIVMSG #bottesting : ' + proverb + ' \r\n')
