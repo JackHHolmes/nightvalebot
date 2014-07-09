@@ -44,3 +44,7 @@ while True:
         n = int(data[4])
         proverbs.proverb(n)
         irc.send ('PRIVMSG #bottesting : ' + proverb + ' \r\n')
+
+   if data[3].lower() == ':!character':
+        character.char_prof
+        irc.send ('PRIVMSG #bottesting : ' + char + ' \r\n')
