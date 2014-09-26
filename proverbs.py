@@ -242,3 +242,4 @@ def proverb(n):
 
     elif (n == 39):
         proverb = 'From Episode :  ""'
+
